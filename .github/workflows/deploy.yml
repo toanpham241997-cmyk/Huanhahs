@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy Vite Client to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -22,18 +22,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      - name: Install dependencies
+      - name: Install (client)
+        working-directory: client
         run: npm ci
 
-      - name: Build
+      - name: Build (client)
+        working-directory: client
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: client/dist
 
   deploy:
     needs: build
