@@ -3,8 +3,8 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
 export default defineConfig({
-  plugins: [react()],
   base: "/Huanhahs/",
+  plugins: [react()],
   root: "client",
   build: {
     outDir: resolve(__dirname, "dist"),
