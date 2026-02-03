@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages (Vite from /client)
+name: Deploy Client to GitHub Pages
 
 on:
   push:
@@ -17,25 +17,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Install root deps
         run: npm ci
 
-      # IMPORTANT:
-      # Do NOT run "npm run build" because it runs: tsx script/build.ts (server build)
-      # We build ONLY the Vite client using a dedicated config that points to /client/index.html
-      - name: Build (Pages)
-        run: npm run build:pages
+      - name: Build client with Vite
+        run: npx vite build --config client/vite.config.ts --root client --outDir dist
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -47,6 +42,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
